@@ -208,7 +208,7 @@ class LoanServiceTest extends TestCase
             'amount' => 1667,
             'outstanding_amount' => 0,
             'currency_code' => $currencyCode,
-            'due_date' => '2020-02-20',
+            'due_date' => '2020-04-20', // Should be '2020-04-20'
             'status' => ScheduledRepayment::STATUS_REPAID,
         ]);
 
@@ -231,21 +231,21 @@ class LoanServiceTest extends TestCase
             'processed_at' => '2020-01-20',
         ]);
 
-        $scheduledRepaymentOne =  ScheduledRepayment::factory()->create([
+        $scheduledRepaymentOne = ScheduledRepayment::factory()->create([
             'loan_id' => $loan->id,
             'amount' => 1666,
             'currency_code' => Loan::CURRENCY_VND,
             'due_date' => '2020-02-20',
             'status' => ScheduledRepayment::STATUS_DUE,
         ]);
-        $scheduledRepaymentTwo =  ScheduledRepayment::factory()->create([
+        $scheduledRepaymentTwo = ScheduledRepayment::factory()->create([
             'loan_id' => $loan->id,
             'amount' => 1666,
             'currency_code' => Loan::CURRENCY_VND,
             'due_date' => '2020-03-20',
             'status' => ScheduledRepayment::STATUS_DUE,
         ]);
-        $scheduledRepaymentThree =  ScheduledRepayment::factory()->create([
+        $scheduledRepaymentThree = ScheduledRepayment::factory()->create([
             'loan_id' => $loan->id,
             'amount' => 1667,
             'currency_code' => Loan::CURRENCY_VND,
@@ -276,7 +276,7 @@ class LoanServiceTest extends TestCase
         $this->assertDatabaseHas('scheduled_repayments', [
             'id' => $scheduledRepaymentOne->id,
             'loan_id' => $loan->id,
-            'amount' => 1667,
+            'amount' => 1666, // should be 1666 because $scheduledRepaymentOne amount is 1666
             'outstanding_amount' => 0,
             'currency_code' => $currencyCode,
             'due_date' => '2020-02-20',
@@ -287,8 +287,8 @@ class LoanServiceTest extends TestCase
         $this->assertDatabaseHas('scheduled_repayments', [
             'id' => $scheduledRepaymentTwo->id,
             'loan_id' => $loan->id,
-            'amount' => 1667,
-            'outstanding_amount' => 333, // 2000 - 1667
+            'amount' => 1666, // should be 1666 because $scheduledRepaymentTwo amount is 1666
+            'outstanding_amount' => 334, // 2000 - 1666
             'currency_code' => $currencyCode,
             'due_date' => '2020-03-20',
             'status' => ScheduledRepayment::STATUS_PARTIAL,
